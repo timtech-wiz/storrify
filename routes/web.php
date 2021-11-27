@@ -39,3 +39,11 @@ Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->nam
 
 
  Route::get('/email', [App\Http\Controllers\DashboardController::class, 'email'])->name('dashboard.email');
+
+
+Route::namespace('Admin')->prefix('admin')->group(function(){
+  
+    Route::get('/deleted_stories', [App\Http\Controllers\Admin\StoriesController::class, 'index'])->name('admin.stories.index');
+    
+});
+
