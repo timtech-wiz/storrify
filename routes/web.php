@@ -14,13 +14,15 @@ use App\Http\Controllers\StoriesController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+Route::get('/',  [App\Http\Controllers\Auth\LoginController::class, 'login']);
+
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+//Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::middleware('auth')->group(function(){
@@ -30,3 +32,10 @@ Route::middleware('auth')->group(function(){
     Route::resource('stories', StoriesController::class);
     
 });
+
+Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard.index');
+ Route::get('/story/{activeStory:slug}', [App\Http\Controllers\DashboardController::class, 'show'])->name('dashboard.show');
+
+
+
+ Route::get('/email', [App\Http\Controllers\DashboardController::class, 'email'])->name('dashboard.email');

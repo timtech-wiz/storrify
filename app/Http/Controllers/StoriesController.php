@@ -4,9 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Story;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoryRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StoriesController extends Controller
 {
+    
+    
+    public function __construct(){
+        $this->authorizeResource(Story::class, 'story');
+    }
+    
+    
+    
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -33,6 +45,7 @@ return view('stories.index',
     public function create()
     {
         //
+        
         $story = new Story();
         return view('stories.create', [
             'story' => $story
@@ -45,16 +58,11 @@ return view('stories.index',
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoryRequest $request)
     {
         //
-       $data = $request->validate([
-            'title' => 'required',
-            'body' => 'required',
-            'type' => 'required',
-            'status' => 'required',
-        ]);
-         auth()->user()->stories()->create($data);
+       //$data = $request->validate($request->all());
+         auth()->user()->stories()->create($request->all());
         
        return redirect()->route('stories.index')->with('status', 'Story Created Successfully!');
         
@@ -88,7 +96,8 @@ return view('stories.index',
     public function edit(Story $story)
     {
         //
-        
+        //Gate::authorize('edit-story', $story);
+        //$this->authorize('update', $story);
          return view('stories.edit',
             [
                'story' => $story
@@ -102,16 +111,11 @@ return view('stories.index',
      * @param  \App\Models\Story  $story
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Story $story)
+    public function update(StoryRequest $request, Story $story)
     {
         //
-         $data = $request->validate([
-            'title' => 'required',
-            'body' => 'required',
-            'type' => 'required',
-            'status' => 'required',
-        ]);
-         $story->update($data);
+         
+         $story->update($request->all());
         
        return redirect()->route('stories.index')->with('status', 'Story Updated Successfully!');
     }
@@ -124,6 +128,7 @@ return view('stories.index',
      */
     public function destroy(Story $story)
     {
-        //
+        $story->delete();
+        return redirect()->route('stories.index')->with('status', 'Story Deleted Successfully!');
     }
 }
