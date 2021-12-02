@@ -27,17 +27,22 @@
                               
                               <td>{{$story->type}}</td>
                               <td>{{$story->user->name}} </td>
-<!--
-                              <td><a href="{{ route('stories.show', [$story])}}" class="btn btn-primary">View</a></td>
-                              <td><a href="{{ route('stories.edit', [$story])}}" class="btn btn-warning">Edit</a></td>
+<!--                              <td><a href="{{ route('admin.stories.restore', [$story])}}" class="btn btn-success">Restore</a></td>-->
                               
-                              <td><form action="{{route('stories.destroy', [$story])}}" method="post">
+                               <td><form action="{{route('admin.stories.restore', [$story])}}" method="post">
+                              @csrf
+                              @method('PUT')
+                              <button class="btn btn-success">Restore</button>
+                              </form>
+                              </td>
+                               
+                              
+                              <td><form action="{{route('admin.stories.delete', [$story])}}" method="post">
                               @csrf
                               @method('DELETE')
                               <button class="btn btn-danger">Delete</button>
                               </form>
                               </td>
--->
                           </tr>
                           @endforeach
                       </tbody>

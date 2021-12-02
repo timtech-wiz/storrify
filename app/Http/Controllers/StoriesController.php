@@ -3,9 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Story;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoryRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\emailNotification;
+use Illuminate\Support\Facades\Log;
+use App\Events\StoryCreated;
+use App\Events\StoryEdited;
+use Intervention\Image\Facades\Image;
+
 
 class StoriesController extends Controller
 {
@@ -28,12 +36,14 @@ class StoriesController extends Controller
     {
         //
         
-$stories = Story::where('user_id',auth()->user()->id)->orderBy('id', 'DESC')->paginate(3);
+$stories = Story::where('user_id',auth()->user()->id)->with('tags')->orderBy('id', 'DESC')->paginate(3);
 
+       
 
 return view('stories.index',
 [
-   'stories' => $stories
+   'stories' => $stories,
+    
 ]);
     }
 
@@ -47,8 +57,12 @@ return view('stories.index',
         //
         
         $story = new Story();
+        
+         $tags = Tag::get();
+        
         return view('stories.create', [
-            'story' => $story
+            'story' => $story,
+            'tags'  => $tags
         ]);
     }
 
@@ -62,7 +76,16 @@ return view('stories.index',
     {
         //
        //$data = $request->validate($request->all());
-         auth()->user()->stories()->create($request->all());
+         $story = auth()->user()->stories()->create($request->all());
+        
+//        Mail::send( new emailNotification($story->title));
+//        
+//        Log::info('A new story with the title '. $story->title .' was added' );
+        
+       // event( new storyCreated($story->title));
+      $this->_uploadImage($request, $story);
+        
+        $story->tags()->sync($request->tags);
         
        return redirect()->route('stories.index')->with('status', 'Story Created Successfully!');
         
@@ -98,9 +121,13 @@ return view('stories.index',
         //
         //Gate::authorize('edit-story', $story);
         //$this->authorize('update', $story);
+        
+        $tags = Tag::get();
+      
          return view('stories.edit',
             [
-               'story' => $story
+               'story' => $story,
+                'tags' => $tags
             ]);
     }
 
@@ -117,6 +144,10 @@ return view('stories.index',
          
          $story->update($request->all());
         
+    $this->_uploadImage($request, $story);
+        
+        $story->tags()->sync($request->tags);
+        
        return redirect()->route('stories.index')->with('status', 'Story Updated Successfully!');
     }
 
@@ -130,5 +161,15 @@ return view('stories.index',
     {
         $story->delete();
         return redirect()->route('stories.index')->with('status', 'Story Deleted Successfully!');
+    }
+    
+    private function _uploadImage($request, $story){
+             if($request->hasFile('image')){
+            $image = $request->file('image');
+            $filename = time(). '.' . $image->getClientOriginalExtension();
+            Image::make($image)->resize(225, 100)->save(public_path('storage/'.$filename));
+            $story->image = $filename;
+            $story->save();
+        }
     }
 }

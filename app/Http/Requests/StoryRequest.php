@@ -38,6 +38,7 @@ class StoryRequest extends FormRequest
             'body' => ['required', 'min:50'],
             'type' => 'required',
             'status' => 'required',
+            'image' => 'sometimes|mimes:jpeg, jpg, png',
         ];
     }
     

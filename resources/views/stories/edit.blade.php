@@ -15,7 +15,7 @@
                  
               
                  
-                 <form action="{{route('stories.update', [$story])}}" method="post">
+                 <form action="{{route('stories.update', [$story])}}" method="post" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     @include('stories.form')

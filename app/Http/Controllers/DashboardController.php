@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Story;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use App\Mail\NotifyAdmin;
+use App\Mail\emailNotification;
 class DashboardController extends Controller
 {
     //
@@ -13,7 +15,7 @@ class DashboardController extends Controller
     public function index(){
 
         //DB::enableQueryLog();
-    $query = Story::where('status' , 1);
+    $query = Story::active();
         
         $type = request()->input('type');
         if(in_array($type, ['long', 'short'])){
@@ -42,12 +44,7 @@ class DashboardController extends Controller
     }
     
     
-    public function email(){
-        Mail::raw('This is the Test Email', function($message){
-            $message->to('admin@localhost.com')->subject('A New Story Was Added');
-        });
-        dd('here');
-    }
+ 
     
 }
 

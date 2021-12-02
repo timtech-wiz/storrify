@@ -5,19 +5,26 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-               
-                <div class="card-header">{{$story->title}}  by {{$story->user->name}}
-                   <a href="{{route('dashboard.index')}}"class='btn btn-default' style='float:right'>Back</a>
-                   
-                   </div>
-                    
-                <div class="card-body">
-                 
-                   <div class="well">
-                  
-                       {{$story->body}}
+               <img src="{{$story->Thumbnail}}" alt="image">
+                     <div class="card-body">
+                  <p class="card-text">{{$story->title}}</p>
+                  Tags:
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                         @foreach($story->tags as $tag)
+                     
+                      <button type="button" class="btn btn-sm btn-outline-primary">{{$tag->name}}</button>
+                      @endforeach
+
+                      <button type="button" class="btn btn-sm btn-outline-secondary">{{$story->user->name}}</button>
+                      
+                      
                        
-                  <p class="font-italic">{{$story->footnote}}</p>
+                    </div>
+                    <small class="text-muted">{{$story->type}}</small>
+                  </div>
+                </div>
                    </div>
                 </div>
             </div>

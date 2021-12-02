@@ -1,24 +1,13 @@
- <div class="form-group"><label for="">Title:</label>
+                  <div class="form-group"><label for="">Title:</label>
                      <input type="text" name='title' class="form-control @error('title') is-invalid @enderror" value="{{old('title', $story->title)}}">
-                     
-                     @error('title')
-                     <span class="invalid-feedback" role="alert">
-                     <strong>{{$message}}</strong>
-                     </span>
-                     
-                     @enderror
+                  <x-form-error field="title" />
                      </div>
                      
                      <div class="form-group"><label for="">Body:</label>
                     <textarea name="body" class="form-control @error('body') is-invalid @enderror"  id="">
                          {{old('body', $story->body)}}
                     </textarea>
-                       @error('body')
-                     <span class="invalid-feedback" role="alert">
-                     <strong>{{$message}}</strong>
-                     </span>
-                     
-                     @enderror
+                     <x-form-error field="body" />
                      
                      </div>
                      
@@ -31,12 +20,7 @@
                         <option value="short" {{'short' == old('type', $story->type ) ? 'selected' : ''}}>Short</option>
                     </select>
                     
-                     @error('type')
-                     <span class="invalid-feedback" role="alert">
-                     <strong>{{$message}}</strong>
-                     </span>
-                     
-                     @enderror
+                   <x-form-error field="type" />
                      
                      </div>
                      
@@ -57,10 +41,24 @@
                           
                          </div>
                          
-                      @error('status')
-                     <span class="invalid-feedback" role="alert">
-                     <strong>{{$message}}</strong>
-                     </span>
-                     
-                     @enderror
+                     <x-form-error field="status" />
                      </div>
+                     
+                    
+                    <div class="form-group"><label for="">Image:</label>
+                     <input type="file" name='image' class="form-control @error('image') is-invalid @enderror">
+                     
+                   <x-form-error field="image" />
+                     </div>
+                     
+                     <img src="{{$story->thumbnail}}" alt='image'>
+                     
+                    <div class="form-group">
+                 @foreach($tags as $tag)  
+                  
+                  <div class="form-check form-check-inline">
+                  <input type="checkbox" class="form-check-input" name="tags[]" {{ in_array($tag->id, old('tags', $story->tags->pluck('id')->toArray())) ? 'checked' : ''}} value="{{$tag->id}}" ></div>
+                  <label for="" class="form-check-label">{{$tag->name}}</label>
+                  
+                 @endforeach
+                 </div>

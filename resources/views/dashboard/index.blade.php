@@ -1,53 +1,69 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Stories') }}
-               
-               <div class="float-right">
-                   <a href="{{route('dashboard.index')}}">All</a>
-                   |
-                   <a href="{{route('dashboard.index', ['type' => 'short'])}}">Short</a>
-                   |
-                   <a href="{{route('dashboard.index', ['type' => 'long'])}}">Long</a>
-               </div>
-               
-               
-                </div>
-
-                <div class="card-body">
-                 
-                  <table class="table table-hover table bordered">
-                      <thead>
-                          <tr>
-                              <td><strong>Title</strong></td>
-                              
-                              <td>Type</td>
-                              <td>Authur</td>
-                          </tr>
-                      </thead>
-                      <tbody>
-                         @foreach($stories as $story)
-                          <tr>
-                              <td><a href="{{route('dashboard.show',[$story] )}}">{{$story->title}}</a></td>
-                               
-                              <td>{{$story->type}}</td>
-                              <td>{{$story->user->name}} </td>
-                              <td></td>
-                             
-                          </tr>
-                          @endforeach
-                      </tbody>
-                  </table>
-                  {{$stories->withQueryString()->links()}}
-                   
-                </div>
-            </div>
+ <section class="jumbotron text-center">
+        <div class="container">
+          <h1 class="jumbotron-heading">Home Page</h1>
+          <p class="lead text-muted">Great Stories from our author.</p>
+          <p>
+            <a href="{{ route('dashboard.index')}}"  class="btn btn-primary my-2">All</a>
+            <a href="{{ route('dashboard.index', ['type' => 'long'])}}" class="btn btn-secondary my-2">Long</a>
+            <a href="{{ route('dashboard.index', ['type' => 'short'])}}" class="btn btn-secondary my-2">Short</a>
+            
         </div>
-    </div>
-</div>
+      </section>
+
+      <div class="album py-5 bg-light">
+        <div class="container">
+
+          <div class="row">
+           
+            @if(count($stories) > 0)
+             @foreach($stories as $story)
+            <div class="col-md-4">
+              <div class="card mb-4 box-shadow">
+               <a href="{{ route('dashboard.show', [$story])}}">
+                <img src="{{$story->Thumbnail}}" alt="image">
+                </a>
+                <div class="card-body">
+                  <p class="card-text">{{$story->title}}</p>
+                  Tags:
+                        
+                  @foreach($story->tags as $tag)
+                     
+                      <button type="button" class="btn btn-sm btn-outline-primary">{{$tag->name}}</button>
+                      @endforeach
+
+               
+
+                  <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                     
+                      <button type="button" class="btn btn-sm btn-outline-secondary">{{$story->user->name}}</button>
+                      
+                      
+                       
+                    </div>
+                    <small class="text-muted">{{$story->type}}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+             
+            @endforeach
+            
+            @else
+            <p>No stories to display!!!</p>
+            
+            @endif
+          </div>
+          {{$stories->withQueryString()->links()}}
+        </div>
+      </div>
+      
+      @section('styles')
+          <link href="{{ asset('css/.css') }}" rel="stylesheet">
+
+      @endsection
 @endsection
  

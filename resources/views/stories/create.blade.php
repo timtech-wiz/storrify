@@ -15,7 +15,7 @@
                  
               
                  
-                 <form action="{{route('stories.store')}}" method="post">
+                 <form action="{{route('stories.store')}}" method="post" enctype="multipart/form-data">
                     @csrf
                      @include('stories.form')
                      <div class="form-group">
