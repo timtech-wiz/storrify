@@ -20,7 +20,7 @@
                               <td>Image</td>
                               <td>Title</td>
                               <td>Tags</td>
-                              <td>Body</td>
+                           
                               <td>Type</td>
                               <td>Status</td>
                           </tr>
